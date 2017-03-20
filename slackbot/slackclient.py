@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 
 
 class SlackClient(object):
-    def __init__(self, token, bot_icon=None, bot_emoji=None, connect=True):
+    def __init__(self, token, bot_icon=None, bot_emoji=None, bot_username=None, connect=True):
         self.token = token
         self.bot_icon = bot_icon
         self.bot_emoji = bot_emoji
-        self.username = None
+        self.username = bot_username
         self.domain = None
         self.login_data = None
         self.websocket = None
@@ -54,7 +54,8 @@ class SlackClient(object):
     def parse_slack_login_data(self, login_data):
         self.login_data = login_data
         self.domain = self.login_data['team']['domain']
-        self.username = self.login_data['self']['name']
+        if self.username is None:
+            self.username = self.login_data['self']['name']
         self.users = dict((u['id'], u) for u in login_data['users'])
         self.parse_channel_data(login_data['channels'])
         self.parse_channel_data(login_data['groups'])
@@ -129,7 +130,7 @@ class SlackClient(object):
         self.webapi.chat.post_message(
                 channel,
                 message,
-                username=self.login_data['self']['name'],
+                username=self.username,
                 icon_url=self.bot_icon,
                 icon_emoji=self.bot_emoji,
                 attachments=attachments,

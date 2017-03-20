@@ -22,7 +22,9 @@ class Bot(object):
             bot_icon=settings.BOT_ICON if hasattr(settings,
                                                   'BOT_ICON') else None,
             bot_emoji=settings.BOT_EMOJI if hasattr(settings,
-                                                    'BOT_EMOJI') else None
+                                                    'BOT_EMOJI') else None,
+            bot_username=settings.BOT_USERNAME if hasattr(settings,
+                                                    'BOT_USERNAME') else None
         )
         self._plugins = PluginsManager()
         self._dispatcher = MessageDispatcher(self._client, self._plugins,
